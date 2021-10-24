@@ -1,3 +1,8 @@
+package uqam.mgl7361.projet.carteinfidelite.persistance;
+
+import org.springframework.stereotype.Service;
+
+@Service
 public class RegistreCadeauImp implements RegistreCadeau {
 
 	public void getCadeau() {
