@@ -1,15 +1,11 @@
 package uqam.mgl7361.projet.carteinfidelite.services;
 
-public interface ServiceCarte {
+import uqam.mgl7361.projet.carteinfidelite.entites.Carte;
 
-	void getPoints();
+public interface ServiceCarte{
 
-	void validerCarte();
+Carte rechercherCarte(long id);
 
-	void ajouterPoints();
-
-	void calculerBonus();
-
-	void deduirePoint();
+Carte MettreAJourInfosCarte(Carte carte);
 
 }
