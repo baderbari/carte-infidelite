@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import uqam.mgl7361.projet.carteinfidelite.transversal.AbstractEntity;
 
 
@@ -32,14 +35,15 @@ public class Magasin extends AbstractEntity {
 	@Column(name = "ADRESSE")
 	private String adresse;
 
-	@OneToMany(mappedBy = "magasin", cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "magasin", cascade = { CascadeType.ALL}, fetch = FetchType.LAZY)
 	private List<Cadeau> listCadeaux;
 
-	@OneToMany(mappedBy = "magasin", cascade = { CascadeType.MERGE,}, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "magasin", cascade = { CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.LAZY)
 	private List<Transaction> listTransactions;
 
 	@ManyToOne
 	@JoinColumn(name = "FK_ZONE")
+	@JsonIgnore
 	private Zone zone;
 
 	public String getLabelle() {

@@ -33,7 +33,7 @@ public class Client extends AbstractEntity {
 	@Column(name = "DATE_NAISSANCE")
 	private Date dateNaissance;
 
-	@OneToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "FK_CARTE")
 	private Carte carte;
 

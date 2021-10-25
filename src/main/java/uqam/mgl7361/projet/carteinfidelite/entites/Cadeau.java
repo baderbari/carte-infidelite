@@ -1,16 +1,18 @@
 package uqam.mgl7361.projet.carteinfidelite.entites;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import uqam.mgl7361.projet.carteinfidelite.transversal.AbstractEntity;
-
-
-
-
 
 
 	@Entity
@@ -33,10 +35,12 @@ import uqam.mgl7361.projet.carteinfidelite.transversal.AbstractEntity;
 
 		@ManyToOne
 		@JoinColumn(name = "FK_ZONE")
+		@JsonIgnore
 		private Zone zone;
 
-		@ManyToOne
+		@ManyToOne(cascade=CascadeType.ALL)
 		@JoinColumn(name = "FK_MAGASIN")
+		@JsonIgnore
 		private Magasin magasin;
 
 		public String getLabelle() {
@@ -71,14 +75,16 @@ import uqam.mgl7361.projet.carteinfidelite.transversal.AbstractEntity;
 			this.zone = zone;
 		}
 
+
 		public Magasin getMagasin() {
-			return magasin;
-		}
+		    return magasin;
+		  }
 
-		public void setMagasin(Magasin magasin) {
-			this.magasin = magasin;
-		}
-
+		  public void setMagasin(Magasin magasin) {
+			  this.magasin = magasin;
+		  }
+		
+		
 		public Cadeau() {
 			super();
 		}

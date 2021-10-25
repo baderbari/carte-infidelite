@@ -2,7 +2,9 @@ package uqam.mgl7361.projet.carteinfidelite.entites;
 
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,6 +15,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import uqam.mgl7361.projet.carteinfidelite.transversal.AbstractEntity;
 
@@ -35,7 +40,7 @@ public class Carte extends AbstractEntity {
 	private Integer solde;
 	
 	@Column(name = "POINTS")
-	private Integer points;
+	private Float points;
 
 
 	@Column(name = "DATE_EXPIRATION")
@@ -44,15 +49,17 @@ public class Carte extends AbstractEntity {
 	@Column(name = "IS_BLOCKED")
 	private Boolean isBlocked;
 
-	@OneToOne(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "FK_CLIENT")
+	@JsonIgnore
 	private Client client;
-
+	
 	@ManyToOne
 	@JoinColumn(name = "FK_ZONE")
+	@JsonIgnore
 	private Zone zone;
 
-	@OneToMany(mappedBy = "carte", cascade = { CascadeType.MERGE}, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "carte",cascade=CascadeType.ALL)
 	private List<Transaction> listTransactions;
 
 	public Date getDateCreation() {
@@ -71,11 +78,11 @@ public class Carte extends AbstractEntity {
 		this.solde = solde;
 	}
 
-	public Integer getPoints() {
+	public Float getPoints() {
 		return points;
 	}
 
-	public void setPoints(Integer points) {
+	public void setPoints(Float points) {
 		this.points = points;
 	}
 	

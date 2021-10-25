@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import uqam.mgl7361.projet.carteinfidelite.transversal.AbstractEntity;
 
 
@@ -28,13 +30,16 @@ public class Zone extends AbstractEntity {
 	@Column(name = "VILLE")
 	private String ville;
 
-	@OneToMany(mappedBy = "zone", cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "zone", cascade = {CascadeType.MERGE, CascadeType.PERSIST }, fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<Carte> listCartes;
 
-	@OneToMany(mappedBy = "zone", cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "zone", cascade = { CascadeType.MERGE, CascadeType.PERSIST }, fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<Cadeau> listCadeaux;
 
-	@OneToMany(mappedBy = "zone", cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "zone", cascade = {CascadeType.ALL }, fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<Magasin> listMagasins;
 
 	public String getLabelle() {

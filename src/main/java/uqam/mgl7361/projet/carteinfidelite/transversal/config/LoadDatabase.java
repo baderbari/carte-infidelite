@@ -10,11 +10,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import uqam.mgl7361.projet.carteinfidelite.entites.Cadeau;
 import uqam.mgl7361.projet.carteinfidelite.entites.Carte;
 import uqam.mgl7361.projet.carteinfidelite.entites.CarteMagasinPK;
 import uqam.mgl7361.projet.carteinfidelite.entites.Client;
 import uqam.mgl7361.projet.carteinfidelite.entites.Magasin;
 import uqam.mgl7361.projet.carteinfidelite.entites.Transaction;
+import uqam.mgl7361.projet.carteinfidelite.persistance.ICadeauDAO;
 import uqam.mgl7361.projet.carteinfidelite.persistance.ICarteDAO;
 import uqam.mgl7361.projet.carteinfidelite.persistance.IClientDAO;
 import uqam.mgl7361.projet.carteinfidelite.persistance.IMagasinDAO;
@@ -31,17 +33,19 @@ class LoadDatabase {
 
   @SuppressWarnings("deprecation")
 @Bean
-  CommandLineRunner initDatabase(IClientDAO repositoryClient , ICarteDAO repositoryCarte , IMagasinDAO repositoryMagasin , ITransactionDAO repositoryTransaction) {
+  CommandLineRunner initDatabase(IClientDAO repositoryClient , ICarteDAO repositoryCarte , IMagasinDAO repositoryMagasin , ITransactionDAO repositoryTransaction , ICadeauDAO repositoryCadeau ) {
 
     return args -> {
     	Client client = new Client();
     	Carte carte = new Carte();
     	Magasin magasin = new Magasin();
+    	Magasin magasin2 = new Magasin();
     	Transaction transaction1 = new Transaction();
     	Transaction transaction2 = new Transaction();
     	Transaction transaction3 = new Transaction();
     	CarteMagasinPK carteMagasinPK = new CarteMagasinPK();
-  
+    	
+    	
     	client.setDateNaissance(new Date(2000, 11, 21));
     	client.setNom("testNOM");
     	client.setPrenom("Testprenom");
@@ -52,6 +56,7 @@ class LoadDatabase {
     	carte.setDateCreation(new Date(2000, 11, 21));
     	carte.setDateExpiration(new Date(2022, 11, 21));
     	carte.setIsBlocked(false);
+    	carte.setPoints((float) 30);
     	carte.setSolde(1000);
     	carte.setUid("carteUid");
     	log.info("Preloading " + repositoryCarte.save(carte));
@@ -59,6 +64,9 @@ class LoadDatabase {
     	magasin.setId((long) 1);
     	magasin.setUid("magasinUid");
     	log.info("Preloading " + repositoryMagasin.save(magasin));
+    	magasin2.setId((long) 2);
+    	magasin2.setUid("magasinUid2");
+    	log.info("Preloading " + repositoryMagasin.save(magasin2));
     	
     	carteMagasinPK.setIdMagasin(magasin.getId());
     	carteMagasinPK.setIdMagasin(carte.getId());
@@ -72,6 +80,7 @@ class LoadDatabase {
     	transaction1.setMagasin(magasin);
     	transaction2.setMagasin(magasin);
     	transaction3.setMagasin(magasin);
+    	transaction1.setmontantTransaction(10); 	
     	
     	log.info("Preloading " + repositoryTransaction.save(transaction1));
     	log.info("Preloading " + repositoryTransaction.save(transaction2));
@@ -82,7 +91,25 @@ class LoadDatabase {
     	listTransaction.add(transaction2);
     	listTransaction.add(transaction3);
     	
-    
+    	
+    	Cadeau cadeauMagasin = new Cadeau();
+    	Cadeau cadeauVille = new Cadeau();
+    	
+    	cadeauMagasin.setDescription("cadeau offert par magasin");
+    	cadeauMagasin.setId((long) 1);
+    	cadeauMagasin.setMagasin(magasin);
+    	cadeauMagasin.setNbrPoint(10);
+    	cadeauMagasin.setUid("uid1");
+    	
+    	cadeauVille.setDescription("cadeau offert par ville");
+    	cadeauVille.setId((long) 2);
+    	cadeauVille.setMagasin(magasin);
+    	cadeauVille.setNbrPoint(30);
+    	cadeauVille.setUid("uid2");
+    	
+    	log.info("Preloading " + repositoryCadeau.save(cadeauMagasin));
+    	log.info("Preloading " + repositoryCadeau.save(cadeauVille));
+ 
     	
   };
 }
