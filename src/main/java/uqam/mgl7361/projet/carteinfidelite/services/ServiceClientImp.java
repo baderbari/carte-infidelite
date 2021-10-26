@@ -12,13 +12,5 @@ public class ServiceClientImp implements ServiceClient {
 	@Autowired
 	private IClientDAO clientDao;
 
-	/**
-	 * 
-	 * @param carte
-	 */
-	public void consulterPoint(int carte) {
-		// TODO - implement ServiceClientImp.consulterPoint
-		throw new UnsupportedOperationException();
-	}
 
 }

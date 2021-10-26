@@ -14,11 +14,7 @@ public class ServiceCadeauImp implements ServiceCadeau {
 
 	@Autowired
 	private ICadeauDAO cadeauDAO;
-	
-	public void recherche() {
-		// TODO - implement ServiceCadeauImp.recherche
-		throw new UnsupportedOperationException();
-	}
+
 
 	@Override
 	public List<Cadeau> consulterCadeaux() {

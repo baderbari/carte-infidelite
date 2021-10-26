@@ -7,8 +7,6 @@ import uqam.mgl7361.projet.carteinfidelite.entites.Cadeau;
 
 public interface ServiceCadeau {
 
-	void recherche();
-
 	List<Cadeau> consulterCadeaux();
 
 	Optional<Cadeau> rechercherCadeau(Long id);
