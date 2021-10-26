@@ -22,4 +22,7 @@ projet de session dans le cadre du cours MGL 7361 a l'uqam
 
 2- importer la collection dans postman
 
-3- chaque requete est scenario 
+3- chaque requete est un scenario 
+
+![image](https://user-images.githubusercontent.com/47699328/138803808-7f67df7f-cc39-4a86-994b-5469f7a930fd.png)
+
