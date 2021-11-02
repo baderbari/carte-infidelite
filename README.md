@@ -4,7 +4,7 @@ projet de session dans le cadre du cours MGL 7361 a l'uqam
 
 ## Comment tester le code :
 
-1- Clone le projet
+1- Cloner le projet
 
 2- lancer le projet en local 
 
