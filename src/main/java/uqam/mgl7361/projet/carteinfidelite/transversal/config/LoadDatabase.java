@@ -1,5 +1,6 @@
 package uqam.mgl7361.projet.carteinfidelite.transversal.config;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,12 +11,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import uqam.mgl7361.projet.carteinfidelite.entites.Cadeau;
-import uqam.mgl7361.projet.carteinfidelite.entites.Carte;
-import uqam.mgl7361.projet.carteinfidelite.entites.CarteMagasinPK;
-import uqam.mgl7361.projet.carteinfidelite.entites.Client;
-import uqam.mgl7361.projet.carteinfidelite.entites.Magasin;
-import uqam.mgl7361.projet.carteinfidelite.entites.Transaction;
+import uqam.mgl7361.projet.carteinfidelite.entites.*;
 import uqam.mgl7361.projet.carteinfidelite.persistance.ICadeauDAO;
 import uqam.mgl7361.projet.carteinfidelite.persistance.ICarteDAO;
 import uqam.mgl7361.projet.carteinfidelite.persistance.IClientDAO;
@@ -36,7 +32,8 @@ class LoadDatabase {
   CommandLineRunner initDatabase(IClientDAO repositoryClient , ICarteDAO repositoryCarte , IMagasinDAO repositoryMagasin , ITransactionDAO repositoryTransaction , ICadeauDAO repositoryCadeau ) {
 
     return args -> {
-    	Client client = new Client();
+    	Client clientNonVUP = new Client();
+		Client clientVUP = new Client();
     	Carte carte = new Carte();
     	Magasin magasin = new Magasin();
     	Magasin magasin2 = new Magasin();
@@ -44,28 +41,30 @@ class LoadDatabase {
     	Transaction transaction2 = new Transaction();
     	Transaction transaction3 = new Transaction();
     	CarteMagasinPK carteMagasinPK = new CarteMagasinPK();
+		Date date = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+		String dateNow = formatter.format(date);
     	
-    	
-    	client.setDateNaissance(new Date(2000, 11, 21));
-    	client.setNom("testNOM");
-    	client.setPrenom("Testprenom");
-    	client.setUid("clientUid");
-    	log.info("Preloading " + repositoryClient.save(client));
-    	
-    	carte.setClient(client);
+    	clientNonVUP.setDateNaissance(new Date(2000, 11, 21));
+    	clientNonVUP.setNom("testNOMNonVUP");
+    	clientNonVUP.setPrenom("TestprenomNonVUP");
+    	clientNonVUP.setStatut(ClientStatut.NON_VUP);
+		clientVUP.setDateNaissance(new Date(2000, 11, 21));
+		clientVUP.setNom("testNOMVUP");
+		clientVUP.setPrenom("TestprenomVUP");
+		clientVUP.setStatut(ClientStatut.VUP);
+    	log.info("Preloading " + repositoryClient.save(clientNonVUP));
+    	log.info("Preloading " + repositoryClient.save(clientVUP));
+
+    	carte.setClient(clientNonVUP);
     	carte.setDateCreation(new Date(2000, 11, 21));
     	carte.setDateExpiration(new Date(2022, 11, 21));
     	carte.setIsBlocked(false);
     	carte.setPoints((float) 30);
     	carte.setSolde(1000);
-    	carte.setUid("carteUid");
+
     	log.info("Preloading " + repositoryCarte.save(carte));
-    	
-    	magasin.setId((long) 1);
-    	magasin.setUid("magasinUid");
     	log.info("Preloading " + repositoryMagasin.save(magasin));
-    	magasin2.setId((long) 2);
-    	magasin2.setUid("magasinUid2");
     	log.info("Preloading " + repositoryMagasin.save(magasin2));
     	
     	carteMagasinPK.setIdMagasin(magasin.getId());
@@ -81,7 +80,13 @@ class LoadDatabase {
     	transaction2.setMagasin(magasin);
     	transaction3.setMagasin(magasin);
     	transaction1.setmontantTransaction(10); 	
-    	
+    	transaction2.setmontantTransaction(1000);
+    	transaction3.setmontantTransaction(100);
+    	transaction1.setDateTransaction(date);
+    	transaction2.setDateTransaction(date);
+    	transaction3.setDateTransaction(date);
+
+
     	log.info("Preloading " + repositoryTransaction.save(transaction1));
     	log.info("Preloading " + repositoryTransaction.save(transaction2));
     	log.info("Preloading " + repositoryTransaction.save(transaction3));
@@ -90,6 +95,7 @@ class LoadDatabase {
     	listTransaction.add(transaction1);
     	listTransaction.add(transaction2);
     	listTransaction.add(transaction3);
+    	repositoryTransaction.saveAll(listTransaction);
     	
     	
     	Cadeau cadeauMagasin = new Cadeau();
@@ -99,13 +105,11 @@ class LoadDatabase {
     	cadeauMagasin.setId((long) 1);
     	cadeauMagasin.setMagasin(magasin);
     	cadeauMagasin.setNbrPoint(10);
-    	cadeauMagasin.setUid("uid1");
     	
     	cadeauVille.setDescription("cadeau offert par ville");
     	cadeauVille.setId((long) 2);
     	cadeauVille.setMagasin(magasin);
     	cadeauVille.setNbrPoint(30);
-    	cadeauVille.setUid("uid2");
     	
     	log.info("Preloading " + repositoryCadeau.save(cadeauMagasin));
     	log.info("Preloading " + repositoryCadeau.save(cadeauVille));

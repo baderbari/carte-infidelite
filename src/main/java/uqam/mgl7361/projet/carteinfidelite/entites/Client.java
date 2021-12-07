@@ -2,13 +2,7 @@ package uqam.mgl7361.projet.carteinfidelite.entites;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import uqam.mgl7361.projet.carteinfidelite.transversal.AbstractEntity;
 
@@ -24,6 +18,10 @@ public class Client extends AbstractEntity {
 	 */
 	private static final long serialVersionUID = -804313006656451515L;
 
+	@Id
+	@Column(name = "ID")
+	private Long id;
+
 	@Column(name = "NOM")
 	private String nom;
 
@@ -36,6 +34,9 @@ public class Client extends AbstractEntity {
 	@OneToOne(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "FK_CARTE")
 	private Carte carte;
+
+	@Column(name = "STATUT")
+	private ClientStatut statut;
 
 	public Client() {
 		super();
@@ -73,4 +74,11 @@ public class Client extends AbstractEntity {
 		this.carte = carte;
 	}
 
+	public ClientStatut getStatut() {
+		return statut;
+	}
+
+	public void setStatut(ClientStatut statut) {
+		this.statut = statut;
+	}
 }

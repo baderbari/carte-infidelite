@@ -19,9 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import uqam.mgl7361.projet.carteinfidelite.entites.Carte;
-import uqam.mgl7361.projet.carteinfidelite.entites.Transaction;
-import uqam.mgl7361.projet.carteinfidelite.entites.Cadeau;
+import uqam.mgl7361.projet.carteinfidelite.entites.*;
 import uqam.mgl7361.projet.carteinfidelite.services.*;
 import uqam.mgl7361.projet.carteinfidelite.services.ServiceCarte;
 import uqam.mgl7361.projet.carteinfidelite.services.ServiceClient;
@@ -38,14 +36,16 @@ public class FacadeCarteController  {
     private ServiceCarte serviceCarte;
     
     @Autowired
-    private ServiceClient serviceclient;
+    private ServiceClient serviceClient;
 	
     @Autowired
     private ServiceMagasin serviceMagasin;
     
     @Autowired
     private ServiceTransaction serviceTransaction;
-    
+
+    @Autowired
+    private ServiceStatsZone serviceStatsZone;
 
     
     /**
@@ -106,8 +106,7 @@ public class FacadeCarteController  {
             return ResponseEntity.ok(listCadeaux);
         }
 	}
-    
-    
+
     /**
      * Endpoint qui recoit un cadeau dans le body et déduit la valeur du cadeau en points du solde en point de la carte 
      * @param cadeau
@@ -131,8 +130,54 @@ public class FacadeCarteController  {
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-    
-    
-    
-    
+
+    /**
+     * Endpoint qui verifie si un client a un statut VUP
+     * @param clientId
+     * @return Client
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/client/consulterStatut/{clientId}")
+    public ResponseEntity<Object> verifierStatutVUP(@PathVariable String clientId) {
+
+        Boolean estclientVUP = serviceClient.verifierStatutVUP(Long.valueOf(clientId));
+
+        if (estclientVUP) {
+            return ResponseEntity.status(HttpStatus.OK).body("Client est VUP");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("client non VUP");
+        }
+    }
+
+    /**
+     *  Endpoint qui change le statut d'un client en VUP
+     * @param clientId
+     * @return
+     * @throws ResourceNotFoundException
+     */
+
+    @PutMapping("/client/attribuerStatutVUP/{clientId}")
+    public ResponseEntity<Client> attribuerStatutVUP(@PathVariable(value = "clientId") Long clientId ) throws ResourceNotFoundException {
+
+        Boolean estclientVUP = serviceClient.verifierStatutVUP(clientId);
+
+        if (Boolean.FALSE.equals(estclientVUP)) {
+            Optional<Client> clientVUP = serviceClient.attribuerStatutVUP(clientId);
+            return new ResponseEntity<Client>(clientVUP.get(), HttpStatus.OK);
+        }else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+    }
+
+    @RequestMapping(value = "/client/achat/{carteId}", method = RequestMethod.POST)
+    public ResponseEntity < String > achat(@RequestBody Transaction transaction , @PathVariable(value = "carteId") Long carteId) {
+
+        Optional<Transaction> achat = Optional.ofNullable(serviceTransaction.acheter(transaction));
+
+        if (achat.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 }

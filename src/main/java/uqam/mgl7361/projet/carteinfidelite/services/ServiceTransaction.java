@@ -15,4 +15,5 @@ public interface ServiceTransaction {
 
 	Optional<Transaction> rechercherTransaction(CarteMagasinPK carteMagasinPK);
 
+    Transaction acheter(Transaction transaction);
 }

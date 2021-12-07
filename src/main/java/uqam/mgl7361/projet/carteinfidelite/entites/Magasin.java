@@ -16,10 +16,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import uqam.mgl7361.projet.carteinfidelite.transversal.AbstractEntity;
 
-
-
-
-
 @Entity
 @Table(name = "MAGASIN")
 public class Magasin extends AbstractEntity {

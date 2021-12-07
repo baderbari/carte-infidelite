@@ -35,4 +35,9 @@ public class ServiceTransactionImp implements ServiceTransaction {
 		return transactionDao.findById(carteMagasinPK);
 	}
 
+	@Override
+	public Transaction acheter(Transaction transaction) {
+		return transactionDao.save(transaction);
+	}
+
 }

@@ -38,7 +38,7 @@ import uqam.mgl7361.projet.carteinfidelite.transversal.AbstractEntity;
 		@JsonIgnore
 		private Zone zone;
 
-		@ManyToOne(cascade=CascadeType.ALL)
+		@ManyToOne
 		@JoinColumn(name = "FK_MAGASIN")
 		@JsonIgnore
 		private Magasin magasin;

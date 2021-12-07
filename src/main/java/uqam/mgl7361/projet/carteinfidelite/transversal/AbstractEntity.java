@@ -16,15 +16,12 @@ public abstract class AbstractEntity implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6497124078836100271L;
 	
 	@Id
 	@Column(name = "ID")
-	@GeneratedValue(strategy= GenerationType.IDENTITY)
+	@GeneratedValue(strategy= GenerationType.AUTO)
 	private Long id;
-	
-	@Column(name = "Entity_UID", unique=true, nullable= false, updatable = false , length = 36)
-	private String uid;
+
 	
 	public Long getId() {
 		return id;
@@ -34,12 +31,5 @@ public abstract class AbstractEntity implements Serializable{
 		this.id = id;
 	}
 
-	public String getUid() {
-		return uid;
-	}
-
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
 
 }

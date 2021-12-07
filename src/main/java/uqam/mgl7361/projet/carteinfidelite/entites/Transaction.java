@@ -45,6 +45,9 @@ public class Transaction implements Serializable {
 	@Column(name = "MONTANT_TRANSACTION")
 	private float montantTransaction;
 
+	@Column(name = "TYPE_TRANSACTION")
+	private TypeTransaction typeTransaction;
+
 	public Date getDateTransaction() {
 		return dateTransaction;
 	}
@@ -84,5 +87,5 @@ public class Transaction implements Serializable {
 	public void setCarte(Carte carte) {
 		this.carte = carte;
 	}
-	
+
 }
