@@ -150,6 +150,83 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "ajout transaction (achat)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "client NON VUP",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/v1/client/consulterStatut/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"client",
+								"consulterStatut",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "client VUP",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/v1/client/consulterStatut/2",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"client",
+								"consulterStatut",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "attribuerStatutVUP",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/v1/client/attribuerStatutVUP/1",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"client",
+								"attribuerStatutVUP",
+								"1"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
