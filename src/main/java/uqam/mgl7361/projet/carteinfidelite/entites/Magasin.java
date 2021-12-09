@@ -1,22 +1,21 @@
 package uqam.mgl7361.projet.carteinfidelite.entites;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
+import lombok.*;
 import uqam.mgl7361.projet.carteinfidelite.transversal.AbstractEntity;
 
+import javax.persistence.*;
+import java.util.List;
+
 @Entity
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor
+@Data
+@Builder
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 @Table(name = "MAGASIN")
 public class Magasin extends AbstractEntity {
 
@@ -38,9 +37,12 @@ public class Magasin extends AbstractEntity {
 	private List<Transaction> listTransactions;
 
 	@ManyToOne
-	@JoinColumn(name = "FK_ZONE")
 	@JsonIgnore
 	private Zone zone;
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
 
 	public String getLabelle() {
 		return labelle;
@@ -81,9 +83,4 @@ public class Magasin extends AbstractEntity {
 	public void setZone(Zone zone) {
 		this.zone = zone;
 	}
-
-	public Magasin() {
-		super();
-	}
-
 }

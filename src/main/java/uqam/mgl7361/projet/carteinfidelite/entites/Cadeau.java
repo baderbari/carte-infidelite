@@ -2,20 +2,24 @@ package uqam.mgl7361.projet.carteinfidelite.entites;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import lombok.*;
 import uqam.mgl7361.projet.carteinfidelite.transversal.AbstractEntity;
 
 
 	@Entity
+	@AllArgsConstructor(access = AccessLevel.PACKAGE)
+	@NoArgsConstructor
+	@Data
+	@Builder
+	@Getter
+	@Setter
+	@ToString
+	@EqualsAndHashCode
 	@Table(name = "cadeau")
 	public class Cadeau extends AbstractEntity {
 
@@ -33,15 +37,20 @@ import uqam.mgl7361.projet.carteinfidelite.transversal.AbstractEntity;
 		@Column(name = "NOMBRE_POINT")
 		private Integer nbrPoint;
 
-		@ManyToOne
-		@JoinColumn(name = "FK_ZONE")
+		@Column(name = "NOMBRE_ACHAT")
+		private Integer nbraCHAT;
+
+		@ManyToOne(fetch = FetchType.LAZY)
 		@JsonIgnore
 		private Zone zone;
 
-		@ManyToOne
-		@JoinColumn(name = "FK_MAGASIN")
+		@ManyToOne(fetch = FetchType.LAZY)
 		@JsonIgnore
 		private Magasin magasin;
+
+		public static long getSerialVersionUID() {
+			return serialVersionUID;
+		}
 
 		public String getLabelle() {
 			return labelle;
@@ -67,6 +76,14 @@ import uqam.mgl7361.projet.carteinfidelite.transversal.AbstractEntity;
 			this.nbrPoint = nbrPoint;
 		}
 
+		public Integer getNbraCHAT() {
+			return nbraCHAT;
+		}
+
+		public void setNbrAchat(Integer nbraCHAT) {
+			this.nbraCHAT = nbraCHAT;
+		}
+
 		public Zone getZone() {
 			return zone;
 		}
@@ -75,18 +92,11 @@ import uqam.mgl7361.projet.carteinfidelite.transversal.AbstractEntity;
 			this.zone = zone;
 		}
 
-
 		public Magasin getMagasin() {
-		    return magasin;
-		  }
-
-		  public void setMagasin(Magasin magasin) {
-			  this.magasin = magasin;
-		  }
-		
-		
-		public Cadeau() {
-			super();
+			return magasin;
 		}
 
-}
+		public void setMagasin(Magasin magasin) {
+			this.magasin = magasin;
+		}
+	}

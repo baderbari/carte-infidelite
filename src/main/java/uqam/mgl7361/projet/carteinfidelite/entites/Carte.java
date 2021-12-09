@@ -1,10 +1,7 @@
 package uqam.mgl7361.projet.carteinfidelite.entites;
 
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,12 +16,19 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import lombok.*;
 import uqam.mgl7361.projet.carteinfidelite.transversal.AbstractEntity;
 
 
 
 
 @Entity
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor
+@Data
+@Builder
+@Getter
+@Setter
 @Table(name = "CARTE")
 public class Carte extends AbstractEntity {
 
@@ -49,18 +53,20 @@ public class Carte extends AbstractEntity {
 	@Column(name = "IS_BLOCKED")
 	private Boolean isBlocked;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "FK_CLIENT")
+	@ManyToOne(fetch = FetchType.LAZY )
 	@JsonIgnore
 	private Client client;
 	
-	@ManyToOne
-	@JoinColumn(name = "FK_ZONE")
+	@ManyToOne(fetch = FetchType.LAZY )
 	@JsonIgnore
 	private Zone zone;
 
 	@OneToMany(mappedBy = "carte",cascade=CascadeType.ALL)
 	private List<Transaction> listTransactions;
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
 
 	public Date getDateCreation() {
 		return dateCreation;
@@ -85,7 +91,7 @@ public class Carte extends AbstractEntity {
 	public void setPoints(Float points) {
 		this.points = points;
 	}
-	
+
 	public Date getDateExpiration() {
 		return dateExpiration;
 	}
@@ -94,12 +100,12 @@ public class Carte extends AbstractEntity {
 		this.dateExpiration = dateExpiration;
 	}
 
-	public Boolean getIsBlocked() {
+	public Boolean getBlocked() {
 		return isBlocked;
 	}
 
-	public void setIsBlocked(Boolean isBlocked) {
-		this.isBlocked = isBlocked;
+	public void setBlocked(Boolean blocked) {
+		isBlocked = blocked;
 	}
 
 	public Client getClient() {
@@ -126,7 +132,23 @@ public class Carte extends AbstractEntity {
 		this.listTransactions = listTransactions;
 	}
 
-	public Carte() {
-		super();
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!( o instanceof Carte )) return false;
+		Carte carte = (Carte) o;
+		return Objects.equals(getDateCreation(), carte.getDateCreation()) &&
+				Objects.equals(getSolde(), carte.getSolde()) &&
+				Objects.equals(getPoints(), carte.getPoints()) &&
+				Objects.equals(getDateExpiration(), carte.getDateExpiration()) &&
+				Objects.equals(isBlocked, carte.isBlocked) &&
+				Objects.equals(getClient(), carte.getClient()) &&
+				Objects.equals(getZone(), carte.getZone()) &&
+				Objects.equals(getListTransactions(), carte.getListTransactions());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getDateCreation(), getSolde(), getPoints(), getDateExpiration(), isBlocked, getClient(), getZone(), getListTransactions());
 	}
 }

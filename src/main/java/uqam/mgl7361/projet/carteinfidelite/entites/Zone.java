@@ -11,11 +11,20 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.*;
 import uqam.mgl7361.projet.carteinfidelite.transversal.AbstractEntity;
 
 
 
 @Entity
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor
+@Data
+@Builder
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 @Table(name = "ZONE")
 public class Zone extends AbstractEntity {
 
@@ -41,6 +50,10 @@ public class Zone extends AbstractEntity {
 	@OneToMany(mappedBy = "zone", cascade = {CascadeType.ALL }, fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<Magasin> listMagasins;
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
 
 	public String getLabelle() {
 		return labelle;
@@ -80,9 +93,5 @@ public class Zone extends AbstractEntity {
 
 	public void setListMagasins(List<Magasin> listMagasins) {
 		this.listMagasins = listMagasins;
-	}
-
-	public Zone() {
-		super();
 	}
 }

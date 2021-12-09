@@ -12,11 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import uqam.mgl7361.projet.carteinfidelite.entites.*;
-import uqam.mgl7361.projet.carteinfidelite.persistance.ICadeauDAO;
-import uqam.mgl7361.projet.carteinfidelite.persistance.ICarteDAO;
-import uqam.mgl7361.projet.carteinfidelite.persistance.IClientDAO;
-import uqam.mgl7361.projet.carteinfidelite.persistance.IMagasinDAO;
-import uqam.mgl7361.projet.carteinfidelite.persistance.ITransactionDAO;
+import uqam.mgl7361.projet.carteinfidelite.persistance.*;
 
 @Configuration
 class LoadDatabase {
@@ -29,12 +25,16 @@ class LoadDatabase {
 
   @SuppressWarnings("deprecation")
 @Bean
-  CommandLineRunner initDatabase(IClientDAO repositoryClient , ICarteDAO repositoryCarte , IMagasinDAO repositoryMagasin , ITransactionDAO repositoryTransaction , ICadeauDAO repositoryCadeau ) {
+  CommandLineRunner initDatabase(IClientDAO repositoryClient , ICarteDAO repositoryCarte , IMagasinDAO repositoryMagasin , ITransactionDAO repositoryTransaction , ICadeauDAO repositoryCadeau , IStatsZoneDAO repoStatZone) {
 
     return args -> {
     	Client clientNonVUP = new Client();
 		Client clientVUP = new Client();
     	Carte carte = new Carte();
+    	Carte carte2 = new Carte();
+    	Zone zone = new Zone();
+    	zone.setId((long) 1);
+    	zone.setLabelle("anjou");
     	Magasin magasin = new Magasin();
     	Magasin magasin2 = new Magasin();
     	Transaction transaction1 = new Transaction();
@@ -49,24 +49,47 @@ class LoadDatabase {
     	clientNonVUP.setNom("testNOMNonVUP");
     	clientNonVUP.setPrenom("TestprenomNonVUP");
     	clientNonVUP.setStatut(ClientStatut.NON_VUP);
+
 		clientVUP.setDateNaissance(new Date(2000, 11, 21));
 		clientVUP.setNom("testNOMVUP");
 		clientVUP.setPrenom("TestprenomVUP");
 		clientVUP.setStatut(ClientStatut.VUP);
-    	log.info("Preloading " + repositoryClient.save(clientNonVUP));
-    	log.info("Preloading " + repositoryClient.save(clientVUP));
 
-    	carte.setClient(clientNonVUP);
+
+
     	carte.setDateCreation(new Date(2000, 11, 21));
     	carte.setDateExpiration(new Date(2022, 11, 21));
-    	carte.setIsBlocked(false);
+    	carte.setBlocked(false);
     	carte.setPoints((float) 30);
     	carte.setSolde(1000);
 
-    	log.info("Preloading " + repositoryCarte.save(carte));
-    	log.info("Preloading " + repositoryMagasin.save(magasin));
-    	log.info("Preloading " + repositoryMagasin.save(magasin2));
-    	
+
+		carte2.setDateCreation(new Date(2000, 11, 21));
+		carte2.setDateExpiration(new Date(2022, 11, 21));
+		carte2.setBlocked(false);
+		carte2.setPoints((float) 110);
+		carte2.setSolde(1000);
+
+
+        List listeCarte = new ArrayList();
+        List listeCarte2 = new ArrayList();
+        List listeMagasin = new ArrayList();
+        listeCarte.add(carte);
+        listeCarte2.add(carte2);
+        listeMagasin.add(magasin);
+        listeMagasin.add(magasin2);
+
+		clientVUP.setCarte(listeCarte);
+		clientNonVUP.setCarte(listeCarte2);
+		List<Transaction> listTransaction = new ArrayList<>();
+		listTransaction.add(transaction1);
+		listTransaction.add(transaction2);
+		listTransaction.add(transaction3);
+
+		zone.setListCartes(listeCarte);
+		zone.setListMagasins((listeMagasin));
+
+
     	carteMagasinPK.setIdMagasin(magasin.getId());
     	carteMagasinPK.setIdMagasin(carte.getId());
     	
@@ -79,25 +102,17 @@ class LoadDatabase {
     	transaction1.setMagasin(magasin);
     	transaction2.setMagasin(magasin);
     	transaction3.setMagasin(magasin);
-    	transaction1.setmontantTransaction(10); 	
-    	transaction2.setmontantTransaction(1000);
-    	transaction3.setmontantTransaction(100);
+    	transaction1.setMontantTransaction(10);
+    	transaction2.setMontantTransaction(1000);
+    	transaction3.setMontantTransaction(100);
     	transaction1.setDateTransaction(date);
     	transaction2.setDateTransaction(date);
     	transaction3.setDateTransaction(date);
 
+		transaction1.setTypeTransaction(TypeTransaction.CREDIT.toString());
+		transaction2.setTypeTransaction(TypeTransaction.CREDIT.toString());
+		transaction3.setTypeTransaction(TypeTransaction.DEBIT.toString());
 
-    	log.info("Preloading " + repositoryTransaction.save(transaction1));
-    	log.info("Preloading " + repositoryTransaction.save(transaction2));
-    	log.info("Preloading " + repositoryTransaction.save(transaction3));
-    	
-    	List<Transaction> listTransaction = new ArrayList<>();
-    	listTransaction.add(transaction1);
-    	listTransaction.add(transaction2);
-    	listTransaction.add(transaction3);
-    	repositoryTransaction.saveAll(listTransaction);
-    	
-    	
     	Cadeau cadeauMagasin = new Cadeau();
     	Cadeau cadeauVille = new Cadeau();
     	
@@ -105,16 +120,30 @@ class LoadDatabase {
     	cadeauMagasin.setId((long) 1);
     	cadeauMagasin.setMagasin(magasin);
     	cadeauMagasin.setNbrPoint(10);
+    	cadeauMagasin.setNbrAchat(10);
     	
     	cadeauVille.setDescription("cadeau offert par ville");
     	cadeauVille.setId((long) 2);
     	cadeauVille.setMagasin(magasin);
     	cadeauVille.setNbrPoint(30);
-    	
-    	log.info("Preloading " + repositoryCadeau.save(cadeauMagasin));
-    	log.info("Preloading " + repositoryCadeau.save(cadeauVille));
- 
-    	
+    	cadeauVille.setNbrAchat(15);
+
+    	List<Cadeau> cadeauList = new ArrayList<>();
+    	cadeauList.add(cadeauVille);
+    	cadeauList.add(cadeauMagasin);
+    	zone.setListCadeaux(cadeauList);
+    	zone.setListMagasins(listeMagasin);
+
+		log.info("Preloading " + repositoryClient.save(clientNonVUP));
+		log.info("Preloading " + repositoryClient.save(clientVUP));
+		log.info("Preloading " + repositoryTransaction.save(transaction1));
+		log.info("Preloading " + repositoryTransaction.save(transaction2));
+		log.info("Preloading " + repositoryTransaction.save(transaction3));
+		log.info("Preloading " + repoStatZone.save(zone));
+		log.info("Preloading " + repositoryCarte.save(carte));
+		log.info("Preloading " + repositoryCarte.save(carte2));
+		log.info("Preloading " + repositoryMagasin.save(magasin));
+		log.info("Preloading " + repositoryMagasin.save(magasin2));
   };
 }
 }

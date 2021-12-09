@@ -1,84 +1,119 @@
 package uqam.mgl7361.projet.carteinfidelite.entites;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.*;
 
+import lombok.*;
 import uqam.mgl7361.projet.carteinfidelite.transversal.AbstractEntity;
 
 
-
-
 @Entity
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor
+@Data
+@Builder
+@Getter
+@Setter
+@ToString
 @Table(name = "CLIENT")
 public class Client extends AbstractEntity {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -804313006656451515L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -804313006656451515L;
 
-	@Id
-	@Column(name = "ID")
-	private Long id;
+    @Id
+    @Column(name = "ID")
+    private Long id;
 
-	@Column(name = "NOM")
-	private String nom;
+    @Column(name = "NOM")
+    private String nom;
 
-	@Column(name = "PRENOM")
-	private String prenom;
+    @Column(name = "PRENOM")
+    private String prenom;
 
-	@Column(name = "DATE_NAISSANCE")
-	private Date dateNaissance;
+    @Column(name = "DATE_NAISSANCE")
+    private Date dateNaissance;
 
-	@OneToOne(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "FK_CARTE")
-	private Carte carte;
+    @OneToMany(mappedBy = "client")
+    private List<Carte> carte;
 
-	@Column(name = "STATUT")
-	private ClientStatut statut;
+    @Column(name = "STATUT")
+    private ClientStatut statut;
 
-	public Client() {
-		super();
-	}
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
-	public String getNom() {
-		return nom;
-	}
+    @Override
+    public Long getId() {
+        return id;
+    }
 
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getPrenom() {
-		return prenom;
-	}
+    public String getNom() {
+        return nom;
+    }
 
-	public void setPrenom(String prenom) {
-		this.prenom = prenom;
-	}
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
 
-	public Date getDateNaissance() {
-		return dateNaissance;
-	}
+    public String getPrenom() {
+        return prenom;
+    }
 
-	public void setDateNaissance(Date dateNaissance) {
-		this.dateNaissance = dateNaissance;
-	}
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
 
-	public Carte getCarte() {
-		return carte;
-	}
+    public Date getDateNaissance() {
+        return dateNaissance;
+    }
 
-	public void setCarte(Carte carte) {
-		this.carte = carte;
-	}
+    public void setDateNaissance(Date dateNaissance) {
+        this.dateNaissance = dateNaissance;
+    }
 
-	public ClientStatut getStatut() {
-		return statut;
-	}
+    public List<Carte> getCarte() {
+        return carte;
+    }
 
-	public void setStatut(ClientStatut statut) {
-		this.statut = statut;
-	}
+    public void setCarte(List<Carte> carte) {
+        this.carte = carte;
+    }
+
+    public ClientStatut getStatut() {
+        return statut;
+    }
+
+    public void setStatut(ClientStatut statut) {
+        this.statut = statut;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!( o instanceof Client )) return false;
+        Client client = (Client) o;
+        return Objects.equals(getId(), client.getId()) &&
+                Objects.equals(getNom(), client.getNom()) &&
+                Objects.equals(getPrenom(), client.getPrenom()) &&
+                Objects.equals(getDateNaissance(), client.getDateNaissance()) &&
+                Objects.equals(getCarte(), client.getCarte()) &&
+                getStatut() == client.getStatut();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getNom(), getPrenom(), getDateNaissance(), getCarte(), getStatut());
+    }
 }

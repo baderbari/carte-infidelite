@@ -1,6 +1,9 @@
 package uqam.mgl7361.projet.carteinfidelite.controlleur;
 
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Optional;
 
 import java.util.List;
@@ -64,6 +67,12 @@ public class FacadeCarteController  {
     		 if (carte.isPresent() && transactionEncours.isPresent()) {
     			 float pointACumuler = serviceCarte.calculerPointsGagne(carte.get().getPoints(), transactionDetails.getMontantTransaction());
     			 carte.get().setPoints(pointACumuler);
+                 Transaction transaction = new Transaction();
+                 transaction.setDateTransaction(new Date());
+                 transaction.setMontantTransaction(transactionDetails.getMontantTransaction());
+                 transaction.setTypeTransaction(TypeTransaction.CREDIT.toString());
+                 transaction.setCarte(carte.get());
+                 carte.get().setListTransactions((List<Transaction>) transaction);
         		 Carte updatedCarte = serviceCarte.MettreAJourInfosCarte(carte.get());
         		 return new ResponseEntity<Carte>(updatedCarte, HttpStatus.ACCEPTED);
     		 }else {
@@ -71,6 +80,47 @@ public class FacadeCarteController  {
 			}
     		       
     }
+
+    /**
+     * endpoint qui retourne la liste des transaction de type Debit
+     * @param carteId
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/carte/consulterTransactionCredit/{carteId}")
+    public ResponseEntity<Object> getTransactionCredit(@PathVariable String carteId) {
+
+        Optional<Carte> carte = serviceCarte.rechercherCarte(Long.valueOf(carteId));
+
+        if (carte.isPresent()) {
+            List<Transaction> transactionsCredit = serviceCarte.listerCredit(Long.valueOf(carteId));
+            return ResponseEntity.status(HttpStatus.OK).body(transactionsCredit);
+        } else {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+
+        }
+
+    }
+
+    /**
+     *  endpoint qui retourne la liste des transaction de type Debit
+     * @param carteId
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/carte/consulterTransactionDebit/{carteId}")
+    public ResponseEntity<Object> getTransactionDebit(@PathVariable String carteId) {
+
+        Optional<Carte> carte = serviceCarte.rechercherCarte(Long.valueOf(carteId));
+
+        if (carte.isPresent()) {
+            List<Transaction> transactionsDebit = serviceCarte.listerDebit(Long.valueOf(carteId));
+            return ResponseEntity.status(HttpStatus.OK).body(transactionsDebit);
+        } else {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+
+        }
+
+    }
+
     
     /**
      * Endpoint pour la Consultation du solde en Point
@@ -126,6 +176,11 @@ public class FacadeCarteController  {
         	}
         	carteClient.get().setPoints(carteClient.get().getPoints() - cadeau.getNbrPoint());
         	serviceCarte.MettreAJourInfosCarte(carteClient.get());
+        	Transaction transaction = new Transaction();
+        	transaction.setDateTransaction(new Date());
+        	transaction.setCarte(carteClient.get());
+        	transaction.setMontantTransaction(cadeau.getNbrPoint());
+        	transaction.setTypeTransaction(TypeTransaction.DEBIT.toString());
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -169,6 +224,12 @@ public class FacadeCarteController  {
 
     }
 
+    /**
+     * permet d'enregistrer une transaction
+     * @param transaction
+     * @param carteId
+     * @return
+     */
     @RequestMapping(value = "/client/achat/{carteId}", method = RequestMethod.POST)
     public ResponseEntity < String > achat(@RequestBody Transaction transaction , @PathVariable(value = "carteId") Long carteId) {
 
@@ -180,4 +241,26 @@ public class FacadeCarteController  {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-}
+    /**
+     * retourne la liste des caadeaux populaires par Zone
+     * @param zoneId
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/zone/cadeauxPopulaires/{zoneId}")
+    public ResponseEntity<Object> getCadeauPopulaire(@PathVariable String zoneId) {
+
+        Optional<Zone> zone = serviceStatsZone.rechercherZone(Long.valueOf(zoneId));
+        if (zone.isPresent()) {
+            List cadeauPopulaires = serviceStatsZone.rechercheCadeauxPopulaires(Long.valueOf(zoneId));
+             if (cadeauPopulaires.isEmpty()){
+                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("la list des cadeaux est vide");
+             }
+            return ResponseEntity.status(HttpStatus.OK).body(cadeauPopulaires);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("la zone n'existe pas");
+        }
+
+    }
+
+
+    }

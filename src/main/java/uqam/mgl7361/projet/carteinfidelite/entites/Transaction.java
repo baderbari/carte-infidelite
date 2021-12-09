@@ -3,19 +3,20 @@ package uqam.mgl7361.projet.carteinfidelite.entites;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 @Entity
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor
+@Data
+@Builder
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
 @Table(name = "TRANSACTION")
 public class Transaction implements Serializable {
 
@@ -27,13 +28,13 @@ public class Transaction implements Serializable {
 	@EmbeddedId
 	private CarteMagasinPK id;
 
-	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@ManyToOne(fetch = FetchType.LAZY ,cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "ID_MAGASIN")
 	@MapsId("idMagasin")
 	@JsonIgnore
 	private Magasin magasin;
 
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY ,cascade=CascadeType.ALL)
 	@JoinColumn(name = "ID_CARTE")
 	@MapsId("idCarte")
 	@JsonIgnore
@@ -46,22 +47,10 @@ public class Transaction implements Serializable {
 	private float montantTransaction;
 
 	@Column(name = "TYPE_TRANSACTION")
-	private TypeTransaction typeTransaction;
+	private String typeTransaction;
 
-	public Date getDateTransaction() {
-		return dateTransaction;
-	}
-
-	public void setDateTransaction(Date dateTransaction) {
-		this.dateTransaction = dateTransaction;
-	}
-
-	public float getMontantTransaction() {
-		return montantTransaction;
-	}
-
-	public void setmontantTransaction(float montantTransaction) {
-		this.montantTransaction = montantTransaction;
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
 	}
 
 	public CarteMagasinPK getId() {
@@ -88,4 +77,27 @@ public class Transaction implements Serializable {
 		this.carte = carte;
 	}
 
+	public Date getDateTransaction() {
+		return dateTransaction;
+	}
+
+	public void setDateTransaction(Date dateTransaction) {
+		this.dateTransaction = dateTransaction;
+	}
+
+	public float getMontantTransaction() {
+		return montantTransaction;
+	}
+
+	public void setMontantTransaction(float montantTransaction) {
+		this.montantTransaction = montantTransaction;
+	}
+
+	public String getTypeTransaction() {
+		return typeTransaction;
+	}
+
+	public void setTypeTransaction(String typeTransaction) {
+		this.typeTransaction = typeTransaction;
+	}
 }
